@@ -3,11 +3,12 @@ import "./jira.js";   // registers the "Read Jira" button
 import { $, DEFAULT_URL, esc, FIELDS } from "./dom.js";
 import { dirHandle, ensureDirPermission, loadDir, writeToDir } from "./folder.js";
 import { batchCases, batchSel, caseKey, clearData, enterBatchMode, enterSingleMode, failedKeys, lastSummary, loadState, manualTagList, restoredSession, saveState, selectedCases, sessionTicket, setBatchCases, setBatchSel, setLastSummary, setRestoredSession, setSessionTicket, setSingleExtras, show, singleExtras, ticketKey, updateBatchUi, updateTagsNote } from "./session.js";
+import { syncGitUrlUi, versionGate } from "./version.js";
 
 let lastLogText = "";
 
 // ---------- steps ----------
-$("toForm").onclick = () => { const u = $("url").value.trim(); if (!u) { $("url").focus(); return; } saveState(); show("form"); $("jiraLink").focus(); };
+$("toForm").onclick = async () => { const u = $("url").value.trim(); if (!u) { $("url").focus(); return; } saveState(); if (!(await versionGate())) return; show("form"); $("jiraLink").focus(); };
 
 $("backUrl").onclick = () => show("url");
 
@@ -299,6 +300,7 @@ function startPoll() {
 function clearRun() { try { chrome.runtime.sendMessage({ action: "clearRunState" }); } catch (e) {} }
 
 loadState().then(async () => {
+  syncGitUrlUi();
   let restored = false;
   try {
     const RUN = await chrome.runtime.sendMessage({ action: "getRunState" });
@@ -331,7 +333,7 @@ window.addEventListener("pagehide", saveState);
 $("resetSession").onclick = async () => {
   if (!confirm("Reset the session?\nThis clears the saved link, values and ticket list.")) return;
   clearRun();
-  FIELDS.forEach(f => { if (f !== "url") $(f).value = ""; });
+  FIELDS.forEach(f => { if (f !== "url" && f !== "gitUrl") $(f).value = ""; });
   setSingleExtras({}); setBatchCases([]); setSessionTicket(""); setRestoredSession(null); $("batchTags").value = "";
   enterSingleMode();
   const m = $("jiraMsg"); m.classList.add("hide"); m.textContent = "";

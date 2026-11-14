@@ -23,6 +23,7 @@ Load unpacked from the **repo root** (`manifest.json` is at the root and points 
 | `core/dates.js` | `slashDate`, `normDate`, `parseDateParts`, `parseTimeToken`, `whenEntries` |
 | `core/compare.js` | every `cmp*`, `flagRuleChecks`, `eventProgramCheck`, `calendarChecks`, `failLabels` |
 | `core/layout.js` | screenshot / report geometry: `planListClip`, `topStackLayout`, `planCalendarParts` |
+| `core/version.js` | `parseVersion`, `cmpVersion`, `manifestVersion` |
 | `core/adf.js` | Jira ADF readers: `adfCellLines`, `allTableRows`, `adfPlainText` |
 | `core/parser/index.js` | `parseTicketV2` (picks the reader) + re-exports every parser |
 | `core/parser/{table,offer,boss,shard,extras,legacy}.js` | one ticket layout / concern each |
@@ -45,6 +46,7 @@ Load unpacked from the **repo root** (`manifest.json` is at the root and points 
 | `popup/ui.js` | ENTRY: button handlers, run, render results, resume |
 | `popup/jira.js` | `readJira`: fetch ticket, call parsers, fill the form |
 | `popup/session.js` | popup state + setters, `saveState` / `loadState`, single / batch mode |
+| `popup/version.js` | step 1 version gate: GitHub URL field, `versionGate`, version popup |
 | `popup/folder.js` | save-folder picker (File System Access + IndexedDB) |
 | `popup/dom.js` | `$`, `FIELDS`, `CLEARABLE`, `esc` |
 
@@ -75,7 +77,7 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
 - `npm test` (Node 18+) when `core/` changed.
 - Shell changes cannot be tested from the terminal: say plainly that it needs a Reload in
   `chrome://extensions` and a manual run, and what to click.
-- Bump `version` in `manifest.json` only when asked.
+- Version: see section 7.
 - Append a short entry to `improvement.txt` describing what changed (used as the push comment).
 
 ## 6. `improvement.txt` — one push = one milestone
@@ -84,3 +86,10 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
   is unchanged, its content was already pushed — **replace it** with a fresh file for the new work.
   If there are unpushed commits or uncommitted changes to it, **append** instead.
 - Keep it short: title line, `Làm gì`, `Kiểm tra`, `Chưa kiểm / lưu ý`. Written in Vietnamese.
+
+## 7. Branches and version
+- `main` = the released extension. Every other branch = a prototype / feature still in development.
+- **Never change `version` in `manifest.json` on a branch.** The version changes only with a commit on
+  `main` (a merge or a direct change), and only when the user asks for the bump.
+- So `version` on `main` is the single source of truth for "latest version".
+- Check `git status -sb` before editing so you know which branch you are on; do not switch branches yourself.

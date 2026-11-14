@@ -9,6 +9,7 @@ import { cmpExact, cmpDuration, flagRuleChecks } from "../src/core/compare.js";
 import { withTerm, reportOutSize } from "../src/core/layout.js";
 import { adfPlainText } from "../src/core/adf.js";
 import { parseTicketV2 } from "../src/core/parser/index.js";
+import { cmpVersion, manifestVersion, parseVersion } from "../src/core/version.js";
 
 test("duration: compared by value, not by characters", () => {
   assert.equal(durSeconds("24h"), 86400);
@@ -46,4 +47,16 @@ test("layout + adf + parser entry", () => {
   assert.deepEqual(reportOutSize(4800, 1000), { w: 2400, h: 500, f: 0.5 });
   assert.equal(adfPlainText({ type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "hello" }] }] }), " hello");
   assert.deepEqual(parseTicketV2(null), { cases: [], warnings: [] });
+});
+
+test("version: compared number by number", () => {
+  assert.equal(cmpVersion("2.33.0", "2.33.0"), 0);
+  assert.equal(cmpVersion("2.33", "2.33.0"), 0);
+  assert.equal(cmpVersion("2.9.0", "2.10.0"), -1);
+  assert.equal(cmpVersion("2.34.0", "2.33.9"), 1);
+  assert.equal(cmpVersion("2.33.0", "abc"), null);
+  assert.deepEqual(parseVersion(" 2.33.0 "), [2, 33, 0]);
+  assert.equal(manifestVersion('{"version":"2.33.0"}'), "2.33.0");
+  assert.equal(manifestVersion("<html>404</html>"), "");
+  assert.equal(manifestVersion('{"name":"x"}'), "");
 });

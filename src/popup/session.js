@@ -1,5 +1,5 @@
 // Popup state (single owner; others use the setters), session memory, single / batch mode.
-import { $, CLEARABLE, DEFAULT_URL, esc, FIELDS } from "./dom.js";
+import { $, CLEARABLE, DEFAULT_GIT_URL, DEFAULT_URL, esc, FIELDS } from "./dom.js";
 
 // ---- session memory: everything typed / read is saved as you go, so closing the popup never loses it ----
 const SESSION_TTL = 12 * 3600 * 1000;   // a saved session is dropped after 12 hours
@@ -108,6 +108,7 @@ export function loadState() {
     form = form || {};
     FIELDS.forEach(f => { $(f).value = form[f] || ""; });
     if (!$("url").value) $("url").value = DEFAULT_URL;
+    if (!$("gitUrl").value) $("gitUrl").value = DEFAULT_GIT_URL;
     const fresh = session && session.v === 1 && (Date.now() - session.savedAt) < SESSION_TTL;
     if (session && !fresh) {                      // expired: drop the old ticket's values and list
       CLEARABLE.forEach(f => { $(f).value = ""; });

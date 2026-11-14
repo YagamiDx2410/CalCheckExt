@@ -5,6 +5,8 @@ A Chrome extension (NOT a macOS app -> no Gatekeeper, no OS permissions,
 no cost). It runs inside your own signed-in Chrome session. Your data
 NEVER leaves your machine: it only talks to Jira and KM Design directly,
 using host_permissions limited to those two domains.
+The only other request is a read-only download of manifest.json from
+GitHub (step 1 version check); nothing is sent to it.
 
 WHAT IT DOES
 ------------

@@ -4,7 +4,9 @@ export const DEFAULT_URL = "https://design.km.globalworldwide.com/design/calenda
 
 export const $ = (id) => document.getElementById(id);
 
-export const FIELDS = ["url", "jiraLink", "calId", "progId", "flag", "event", "tags", "date", "time", "pre", "dur", "post"];
+export const DEFAULT_GIT_URL = "https://raw.githubusercontent.com/YagamiDx2410/CalCheckExt/main/manifest.json";
+
+export const FIELDS = ["url", "gitUrl", "jiraLink", "calId", "progId", "flag", "event", "tags", "date", "time", "pre", "dur", "post"];
 
 export function esc(s) { return (s || "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m])); }
 

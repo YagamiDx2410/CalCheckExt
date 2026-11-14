@@ -5,10 +5,26 @@ Làm gì
   đã được push thì thay bằng file mới, chưa push thì ghi nối thêm.
 - Dọn main khỏi Vitest: xoá tests/__snapshots__/ và node_modules/ còn sót ở local (cả hai chưa từng
   nằm trong git của main). Phần Vitest vẫn nguyên ở nhánh addTestNode.
+- CLAUDE.md: thêm mục 7 — nhánh là prototype, không đổi version trên nhánh; version chỉ đổi khi
+  commit vào main.
+- Kiểm tra version ở bước 1/2 (URL):
+  - Thêm ô "GitHub manifest URL", mặc định là manifest.json của nhánh main trên GitHub; ô trống thì
+    báo lỗi chữ đỏ và khoá nút Next.
+  - Bấm Next: tải manifest.json đó, so version với bản đang cài. Khớp thì sang bước 2.
+  - Lệch (cao hơn hoặc thấp hơn): hiện popup giữa màn hình ghi version đang cài và version trên git,
+    nút Close cùng kích thước nút Next; ở lại bước 1.
+  - Không tải / không đọc được version: báo lỗi chữ đỏ, ở lại bước 1.
+  - Code: core/version.js (so sánh, thuần) + popup/version.js (ô nhập, tải file, popup).
 
 Kiểm tra
+- npm test: 6 test đều qua (thêm test so sánh version).
+- Thử giao diện bằng trang giả lập chrome.*: ô trống -> lỗi đỏ + khoá Next; version thấp hơn / cao hơn
+  -> popup, ở lại bước 1; version khớp -> sang bước 2; URL sai -> lỗi đỏ; Close = Next (344x33).
 - Rà toàn bộ file của main: không còn chữ "vitest"; package.json không có dependency nào.
 
 Chưa kiểm / lưu ý
+- Chưa thử trong Chrome thật (Reload extension rồi bấm Next).
+- Chỉ kiểm tra khi bấm Next; nếu popup mở lại thẳng ở bước 2 (phiên đã lưu) thì không kiểm tra.
+- Extension giờ gọi thêm GitHub (chỉ đọc manifest.json, không gửi dữ liệu); README.txt đã ghi lại.
 - tests/core.test.js vẫn giữ: dùng node:test có sẵn của Node, không liên quan Vitest (npm test).
 - Không đổi code trong src/.

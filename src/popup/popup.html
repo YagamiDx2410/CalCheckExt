@@ -76,6 +76,12 @@
   .bs-cnt { flex:0 0 auto; color:#7a7f92; font-size:11px; }
   .cap-tag { font-size:10px; font-weight:700; border-radius:4px; padding:0 5px; margin-left:4px; }
   .cap-info { background:#e8f0fe; color:#2d6cdf; } .cap-warn { background:#fff3e0; color:#b26a00; } .cap-bad { background:#fdeaea; color:#c0392b; }
+  .field-err { font-size:11px; color:#c0392b; margin-top:2px; font-weight:600; }
+  .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(22,24,43,.45); z-index:10; }
+  .modal-card { width:372px; max-width:100%; padding:14px; background:#fff; border-radius:10px; box-shadow:0 8px 28px rgba(0,0,0,.28); }
+  .modal-card h3 { margin:0 0 8px; font-size:14px; color:#c0392b; }
+  .ver-row { display:flex; justify-content:space-between; padding:3px 0; font-size:13px; }
+  .ver-row b { font-variant-numeric:tabular-nums; }
   .logbar { display:flex; justify-content:flex-end; margin-top:6px; }
 </style>
 </head>
@@ -95,6 +101,11 @@
       <input id="url" type="text" spellcheck="false" placeholder="https://design.km.globalworldwide.com/design/calendars">
       <div class="hint">The calendars list page. Usually leave the default. You must already be signed in to it in Chrome.</div>
 
+      <label>GitHub manifest URL (version check) <span class="req">*</span></label>
+      <input id="gitUrl" type="text" spellcheck="false" placeholder="https://raw.githubusercontent.com/YagamiDx2410/CalCheckExt/main/manifest.json">
+      <div class="field-err hide" id="gitErr"></div>
+      <div class="hint">manifest.json of the main branch. Next compares its version with the installed one.</div>
+
       <div class="saveloc">
         <label>Where to save evidence screenshots</label>
         <div class="loc-row"><span class="loc-ic">&#128193;</span><span id="locName">Downloads/CalCheck (default)</span></div>
@@ -107,6 +118,17 @@
 
       <div class="btns"><button class="act primary" id="toForm">Next &rarr;</button></div>
     </section>
+
+    <!-- version mismatch popup (step 1) -->
+    <div class="modal hide" id="verModal">
+      <div class="modal-card" role="dialog" aria-modal="true">
+        <h3>Version mismatch</h3>
+        <div class="ver-row"><span>Installed version</span><b id="verLocal"></b></div>
+        <div class="ver-row"><span>GitHub version (main)</span><b id="verGit"></b></div>
+        <div class="hint" id="verMsg"></div>
+        <div class="btns"><button class="act primary" id="verClose" type="button">Close</button></div>
+      </div>
+    </div>
 
     <!-- STEP 2: VALUES -->
     <section id="stepForm" class="hide">
