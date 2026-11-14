@@ -1,0 +1,9 @@
+{
+  "name": "calcheck-ext",
+  "private": true,
+  "type": "module",
+  "description": "Dev tooling only. The extension itself is src/ (Load unpacked) and needs no build step.",
+  "scripts": {
+    "test": "node --test tests/"
+  }
+}
