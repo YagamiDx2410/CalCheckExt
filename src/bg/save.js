@@ -3,7 +3,7 @@ import { CAP } from "./state.js";
 import { safeName } from "../core/text.js";
 
 export function notify(title, message) {
-  try { chrome.notifications.create("", { type: "basic", iconUrl: "src/icons/icon128.png", title, message, priority: 2 }); } catch (e) {}
+  try { chrome.notifications.create("", { type: "basic", iconUrl: chrome.runtime.getURL("src/icons/icon128.png"), title, message, priority: 2 }); } catch (e) {}
 }
 
 // ---- run log (saved only when something went wrong: retry / fallback / no image / error)
@@ -37,7 +37,7 @@ export function buildLog(ticket, rows) {
 async function ensureOffscreen() {
   try {
     if (chrome.offscreen.hasDocument && await chrome.offscreen.hasDocument()) return true;
-    await chrome.offscreen.createDocument({ url: "src/offscreen.html", reasons: ["BLOBS"], justification: "Write evidence screenshots into the folder the user chose." });
+    await chrome.offscreen.createDocument({ url: chrome.runtime.getURL("src/offscreen.html"), reasons: ["BLOBS"], justification: "Write evidence screenshots into the folder the user chose." });
     return true;
   } catch (e) { return /single offscreen|only a single|already/i.test(String((e && e.message) || e)); }
 }

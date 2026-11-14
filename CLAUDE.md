@@ -68,8 +68,9 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
   `.toString()`): no `import`, no call to anything declared outside the function body.
 - **Shared state is assigned through its setter** (`setRUN`, `setCUR`, `setBatchSel`, ...). An imported
   binding is read-only; `RUN = ...` outside `bg/state.js` throws. Mutating a property (`CAP.method = ...`) is fine.
-- **Extension paths are relative to the repo root**: `"src/offscreen.html"`, `"src/lib/html2canvas.min.js"`,
-  `"src/icons/..."`. Import paths are relative to the importing file and need the `.js` extension.
+- **Extension paths start at the repo root** (`src/...`). `executeScript` `files` take them as is
+  (`"src/lib/html2canvas.min.js"`); everywhere else wrap them in `chrome.runtime.getURL("src/...")` — a bare
+  relative URL is resolved against the calling script (`src/bg/`), not the root (notification icon, offscreen page). Import paths are relative to the importing file and need the `.js` extension.
 - Modules are always strict mode: declare every variable.
 - Do not edit `src/lib/html2canvas.min.js`.
 
