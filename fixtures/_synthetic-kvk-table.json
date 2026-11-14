@@ -1,0 +1,479 @@
+{
+ "key": "SYNTHETIC-1",
+ "fields": {
+  "summary": "Synthetic KvK calendar (made-up data, not a real ticket)",
+  "description": {
+   "type": "doc",
+   "version": 1,
+   "content": [
+    {
+     "type": "paragraph",
+     "content": [
+      {
+       "type": "text",
+       "text": "Global: Yes. Repeat every 7 days, ends after 3 occurrences."
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "content": [
+      {
+       "type": "tableRow",
+       "content": [
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "ID"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Program Name"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Flag"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Content"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Shard Tags"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Start Date"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Time of Day"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Pre-Duration"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Duration"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableHeader",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Post-Duration"
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "tableRow",
+       "content": [
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "cal.kvk.s1"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "kvk.s1.day1"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "kvk_live"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "ev.kvk.day1.sms, tag.kvk.pack1"
+            }
+           ]
+          },
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "ev.kvk.day1.slb"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "events-a"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "Tuesday, 03/11/2026"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "10:00 UTC"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "-"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "2d 3h"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "1h"
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "tableRow",
+       "content": [
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "cal.kvk.s1"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "kvk.s1.day2"
+            }
+           ]
+          },
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "kvk.s1.0.events"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "tbd"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "ev.kvk.day2.amstag.kvk.pack2"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "events-a"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "25th September 2026"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "00:00 UTC"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": ""
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": "24h"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "type": "tableCell",
+         "content": [
+          {
+           "type": "paragraph",
+           "content": [
+            {
+             "type": "text",
+             "text": ""
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

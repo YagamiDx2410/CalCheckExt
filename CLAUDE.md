@@ -57,7 +57,8 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
 2. Put it in the existing file whose row above matches. Create a new file only for a genuinely new
    concern (e.g. a new ticket layout -> `core/parser/<name>.js`, then wire it in `parser/index.js`).
 3. Add `export` on the declaration and one `import { ... }` line in the caller. Keep import lists alphabetical.
-4. New `core/` function -> add a case in `tests/core.test.js`.
+4. New `core/` function or business rule -> add a row in `tests/compare.table.test.js` (`test.each`).
+   Parser change -> run the snapshot test; a ticket read wrongly is first saved to `fixtures/` (see `fixtures/README.md`).
 5. New comparison -> `core/compare.js`, returning the usual row `{ label, pass, line }`; call it from `bg/check.js`.
 6. New field read from KM -> inside the relevant `inj_*` in `bg/injected.js`.
 
@@ -72,8 +73,17 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
 - Do not edit `src/lib/html2canvas.min.js`.
 
 ## 5. Before you say "done"
-- `npm test` (Node 18+) when `core/` changed.
+- `npm test` (Vitest) when `core/` changed. If `node` is not on PATH: `export PATH=/opt/homebrew/bin:$PATH`.
+- A snapshot diff is either intended (`npm run test:update`, and say so) or a regression (fix it). Never update snapshots just to get green.
+- `fixtures/KM-*.json` and the parser snapshot are git-ignored (internal data). Do not commit or paste them anywhere.
 - Shell changes cannot be tested from the terminal: say plainly that it needs a Reload in
   `chrome://extensions` and a manual run, and what to click.
 - Bump `version` in `manifest.json` only when asked.
 - Append a short entry to `improvement.txt` describing what changed (used as the push comment).
+
+## 6. `improvement.txt` — one push = one milestone
+- It holds ONLY what changed since the last `git push`. The user pastes it as the push comment.
+- At the start of a task run `git status -sb` / `git log origin/main..HEAD`: if `improvement.txt` is already
+  in the last pushed commit and unchanged, its content is old — **replace it** with a fresh file for the new work.
+  Otherwise **append** to it.
+- Keep it short: title line, `Làm gì`, `Kiểm tra`, `Chưa kiểm / lưu ý`. Written in Vietnamese.

@@ -1,43 +1,24 @@
-improvement: tách module (ES module, không cần bundler)
+improvement: thêm test (Vitest) cho core/
 
 Làm gì
-- Chuyển mã nguồn extension vào src/; manifest.json vẫn ở gốc repo (Load unpacked vẫn chọn CalCheckExt như cũ).
-- Tách background.js (1.620 dòng) và popup.js (1.708 dòng) thành 27 module:
-  - src/core/  : code thuần, không đụng chrome.* / document, test được bằng Node
-      text, ids, duration, dates, compare, layout, adf
-      parser/ index (chọn bộ đọc), table, offer, boss, shard, extras, legacy
-  - src/bg/    : lớp vỏ service worker
-      run (entry), check, capture, report, save, navigate, state, injected
-  - src/popup/ : lớp vỏ popup
-      ui (entry), jira, session, folder, dom
-- manifest: background.service_worker = src/bg/run.js + "type": "module";
-  default_popup = src/popup/popup.html; popup.html nạp <script type="module" src="ui.js">.
-- Đường dẫn tính từ gốc extension đổi sang src/...: offscreen.html, lib/html2canvas.min.js, icon thông báo.
-- Các hàm inj_* (tiêm vào trang KM) gom về bg/injected.js, giữ tự chứa, không import.
-- Thêm package.json ("type": "module", npm test) và tests/core.test.js (smoke test cho core).
-
-Nguyên tắc
-- Chỉ di chuyển nguyên văn + thêm export/import, không sửa logic, không dọn code.
-- Ngoại lệ bắt buộc duy nhất: biến trạng thái dùng chung (RUN, CUR ở bg/state.js;
-  batchCases, batchSel, lastSummary, singleExtras, sessionTicket, restoredSession ở
-  popup/session.js) được gán từ module khác qua hàm set...() vì binding import là chỉ-đọc.
-- Đồ thị phụ thuộc một chiều, không vòng: core <- bg, core <- popup; core không import lớp vỏ.
+- npm test chạy Vitest (thêm test:watch, test:update); tests/core.test.js chuyển sang Vitest.
+- tests/parser.snapshot.test.js: snapshot cho bộ đọc ticket, mỗi file trong fixtures/ là một test
+  (gọi parseTicketV2 + parseCountyConfig + parsePerRowExtras giống popup/jira.js).
+- tests/compare.table.test.js: quy tắc nghiệp vụ viết thành bảng ví dụ — thời lượng, giờ, ngày,
+  id (nguyên id, sai trường, gợi ý "thừa 1 ký tự"), id dính nhau, When nhiều mục, flag,
+  và bố cục ảnh (planListClip, topStackLayout).
+- fixtures/: README hướng dẫn lưu ticket Jira + 1 fixture tự dựng (_synthetic-kvk-table.json).
+- .gitignore: fixtures/KM-*.json và snapshot của parser không đưa lên git (dữ liệu nội bộ).
+- CLAUDE.md: thêm rule test và rule "mỗi lần push là một mốc, làm mới improvement.txt".
 
 Kiểm tra
-- Chạy bản gốc và bản module trên cùng dữ liệu mẫu (parser, so sánh, layout): kết quả giống hệt.
-- Hai entry (bg/run.js, popup/ui.js) nạp và liên kết được với chrome/document giả lập.
-- Chưa kiểm: chạy thật trong Chrome (Reload thẻ CalCheck) và npm test bằng Node.
+- npm test: 3 file, 71 test, đều qua.
 
-Lưu ý
-- background.js cũ không ở strict mode; ES module luôn strict (đã rà, không thấy gán biến chưa khai báo).
-- core/parser/legacy.js: parseTicketHtml cần DOMParser nên chỉ chạy trong trình duyệt.
-- Còn trùng lặp để bước sau dọn: MON / MON_BG, monNum / monNumBg trong core/dates.js.
-
-Rule cho repo (CLAUDE.md)
-- Thêm CLAUDE.md ở gốc repo, mọi phiên Claude tự đọc khi mở repo:
-  - Tiết kiệm token: không ghi lại cả file, chỉ sửa đúng dòng cần; không tách/định dạng lại module;
-    chỉ đọc đoạn cần (grep trước); không sửa ngoài phạm vi việc được giao.
-  - Bản đồ module: file nào chứa gì, để biết ngay hàm mới đặt ở đâu mà không phải đọc lại code.
-  - Quy trình thêm hàm / chức năng: thuần -> core/, đụng trình duyệt -> lớp vỏ; thêm export + import; thêm test.
-  - Luật cứng: inj_* tự chứa, gán trạng thái qua set...(), đường dẫn extension tính từ gốc repo.
-  - Trước khi báo xong: npm test, nói rõ phần cần thử tay trong Chrome, ghi thêm vào improvement.txt.
+Chưa kiểm / lưu ý
+- Chưa có fixture ticket thật: cần đăng nhập Jira để lưu (xem fixtures/README.md). Snapshot hiện
+  chỉ bảo vệ ticket tự dựng.
+- Snapshot của parser bị git-ignore nên mỗi máy tự sinh lần đầu; bỏ 2 dòng trong .gitignore nếu repo
+  là repo riêng tư của công ty.
+- Ghi nhận hành vi hiện tại: bộ đọc tách "ev.ftev.kvk.v2" thành 2 id, chỉ giữ nguyên khi KM có đúng
+  id đó (adaptGlued). Chưa sửa logic nào.
+- Không đổi code trong src/.

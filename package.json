@@ -4,7 +4,9 @@
   "type": "module",
   "description": "Dev tooling only. The extension itself is src/ (Load unpacked) and needs no build step.",
   "scripts": {
-    "test": "node --test tests/"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:update": "vitest run -u"
   },
   "devDependencies": {
     "vitest": "^5.1.0"

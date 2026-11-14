@@ -1,6 +1,6 @@
 // Smoke tests for the pure modules in src/core (no chrome.*, no document).
-// Run: npm test   (Node 18+)
-import test from "node:test";
+// Run: npm test
+import { test } from "vitest";
 import assert from "node:assert/strict";
 import { durSeconds, durVal } from "../src/core/duration.js";
 import { slashDate, normDate, parseDateParts, parseTimeToken } from "../src/core/dates.js";
