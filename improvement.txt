@@ -1,43 +1,14 @@
-improvement: tách module (ES module, không cần bundler)
+improvement: rule làm mới improvement.txt sau mỗi lần push
 
 Làm gì
-- Chuyển mã nguồn extension vào src/; manifest.json vẫn ở gốc repo (Load unpacked vẫn chọn CalCheckExt như cũ).
-- Tách background.js (1.620 dòng) và popup.js (1.708 dòng) thành 27 module:
-  - src/core/  : code thuần, không đụng chrome.* / document, test được bằng Node
-      text, ids, duration, dates, compare, layout, adf
-      parser/ index (chọn bộ đọc), table, offer, boss, shard, extras, legacy
-  - src/bg/    : lớp vỏ service worker
-      run (entry), check, capture, report, save, navigate, state, injected
-  - src/popup/ : lớp vỏ popup
-      ui (entry), jira, session, folder, dom
-- manifest: background.service_worker = src/bg/run.js + "type": "module";
-  default_popup = src/popup/popup.html; popup.html nạp <script type="module" src="ui.js">.
-- Đường dẫn tính từ gốc extension đổi sang src/...: offscreen.html, lib/html2canvas.min.js, icon thông báo.
-- Các hàm inj_* (tiêm vào trang KM) gom về bg/injected.js, giữ tự chứa, không import.
-- Thêm package.json ("type": "module", npm test) và tests/core.test.js (smoke test cho core).
-
-Nguyên tắc
-- Chỉ di chuyển nguyên văn + thêm export/import, không sửa logic, không dọn code.
-- Ngoại lệ bắt buộc duy nhất: biến trạng thái dùng chung (RUN, CUR ở bg/state.js;
-  batchCases, batchSel, lastSummary, singleExtras, sessionTicket, restoredSession ở
-  popup/session.js) được gán từ module khác qua hàm set...() vì binding import là chỉ-đọc.
-- Đồ thị phụ thuộc một chiều, không vòng: core <- bg, core <- popup; core không import lớp vỏ.
+- CLAUDE.md: thêm mục 6 — improvement.txt chỉ ghi thay đổi kể từ lần push gần nhất; nếu nội dung
+  đã được push thì thay bằng file mới, chưa push thì ghi nối thêm.
+- Dọn main khỏi Vitest: xoá tests/__snapshots__/ và node_modules/ còn sót ở local (cả hai chưa từng
+  nằm trong git của main). Phần Vitest vẫn nguyên ở nhánh addTestNode.
 
 Kiểm tra
-- Chạy bản gốc và bản module trên cùng dữ liệu mẫu (parser, so sánh, layout): kết quả giống hệt.
-- Hai entry (bg/run.js, popup/ui.js) nạp và liên kết được với chrome/document giả lập.
-- Chưa kiểm: chạy thật trong Chrome (Reload thẻ CalCheck) và npm test bằng Node.
+- Rà toàn bộ file của main: không còn chữ "vitest"; package.json không có dependency nào.
 
-Lưu ý
-- background.js cũ không ở strict mode; ES module luôn strict (đã rà, không thấy gán biến chưa khai báo).
-- core/parser/legacy.js: parseTicketHtml cần DOMParser nên chỉ chạy trong trình duyệt.
-- Còn trùng lặp để bước sau dọn: MON / MON_BG, monNum / monNumBg trong core/dates.js.
-
-Rule cho repo (CLAUDE.md)
-- Thêm CLAUDE.md ở gốc repo, mọi phiên Claude tự đọc khi mở repo:
-  - Tiết kiệm token: không ghi lại cả file, chỉ sửa đúng dòng cần; không tách/định dạng lại module;
-    chỉ đọc đoạn cần (grep trước); không sửa ngoài phạm vi việc được giao.
-  - Bản đồ module: file nào chứa gì, để biết ngay hàm mới đặt ở đâu mà không phải đọc lại code.
-  - Quy trình thêm hàm / chức năng: thuần -> core/, đụng trình duyệt -> lớp vỏ; thêm export + import; thêm test.
-  - Luật cứng: inj_* tự chứa, gán trạng thái qua set...(), đường dẫn extension tính từ gốc repo.
-  - Trước khi báo xong: npm test, nói rõ phần cần thử tay trong Chrome, ghi thêm vào improvement.txt.
+Chưa kiểm / lưu ý
+- tests/core.test.js vẫn giữ: dùng node:test có sẵn của Node, không liên quan Vitest (npm test).
+- Không đổi code trong src/.

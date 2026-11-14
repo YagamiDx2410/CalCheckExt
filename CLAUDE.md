@@ -77,3 +77,10 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
   `chrome://extensions` and a manual run, and what to click.
 - Bump `version` in `manifest.json` only when asked.
 - Append a short entry to `improvement.txt` describing what changed (used as the push comment).
+
+## 6. `improvement.txt` — one push = one milestone
+- It holds ONLY what changed since the last `git push`. The user pastes it as the push comment.
+- At the start of a task run `git status -sb`: if the branch is level with its remote and `improvement.txt`
+  is unchanged, its content was already pushed — **replace it** with a fresh file for the new work.
+  If there are unpushed commits or uncommitted changes to it, **append** instead.
+- Keep it short: title line, `Làm gì`, `Kiểm tra`, `Chưa kiểm / lưu ý`. Written in Vietnamese.
