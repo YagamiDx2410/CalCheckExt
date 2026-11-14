@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "CalCheck — Calendar/Program checker",
+  "version": "2.33.0",
+  "description": "Reads a Jira ticket to auto-fill keywords, opens the Calendar/Program on KM Design, compares the data, captures an evidence screenshot, and reports PASS/FAIL.",
+  "permissions": [
+    "scripting",
+    "tabs",
+    "downloads",
+    "notifications",
+    "storage",
+    "alarms",
+    "debugger",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "https://design.km.globalworldwide.com/*",
+    "https://globalworldwide.atlassian.net/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CalCheck",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
