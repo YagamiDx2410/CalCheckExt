@@ -1,4 +1,5 @@
 // Popup DOM basics and field lists.
+import { AI_FIELDS } from "../core/ai.js";
 
 export const DEFAULT_URL = "https://design.km.globalworldwide.com/design/calendars";
 
@@ -11,4 +12,5 @@ export const FIELDS = ["url", "gitUrl", "jiraLink", "calId", "progId", "flag", "
 export function esc(s) { return (s || "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m])); }
 
 // clear all comparison/nav fields (keep URL; jiraLink optional)
-export const CLEARABLE = ["calId", "progId", "flag", "event", "tags", "date", "time", "pre", "dur", "post"];
+// (one list: core/ai.js AI_FIELDS, so the AI targets always follow the form fields)
+export const CLEARABLE = AI_FIELDS.map(f => f.key);

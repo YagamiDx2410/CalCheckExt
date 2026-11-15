@@ -1,8 +1,10 @@
 // Read a Jira ticket and auto-fill the popup.
 import { adfPlainText } from "../core/adf.js";
+import { adfPromptText } from "../core/ai.js";
 import { parseCountyConfig, parsePerRowExtras, parseTicket, parseTicketHtml, parseTicketV2 } from "../core/parser/index.js";
+import { aiReview, clearAi, renderAi } from "./ai.js";
 import { $ } from "./dom.js";
-import { clearData, enterBatchMode, enterSingleMode, saveState, sessionHasData, sessionTicket, setSessionTicket, setSingleExtras, singleExtras } from "./session.js";
+import { clearData, enterBatchMode, enterSingleMode, fillSingle, saveState, sessionHasData, sessionTicket, setSessionTicket } from "./session.js";
 
 // =================== JIRA AUTO-FILL ===================
 function extractIssueKey(link) {
@@ -24,6 +26,7 @@ async function readJira() {
     clearData(false); enterSingleMode();
   }
   setSessionTicket(key);
+  clearAi();
 
   $("jiraRead").disabled = true;
   try {
@@ -44,6 +47,13 @@ async function readJira() {
     if (!parsed || !parsed.cases || !parsed.cases.length) {
       const html = (data.renderedFields && data.renderedFields.description) ? data.renderedFields.description : "";
       if (html) { const g = parseTicketHtml(html); if (Object.values(g).some(Boolean)) parsed = { cases: [g], warnings: [] }; }
+    }
+    // AI assist (only when its toggle is on): a second, independent read of the same ticket
+    const ticketText = ((data.fields && data.fields.summary) || "") + "\n" + (data.fields && data.fields.description ? adfPromptText(data.fields.description) : "");
+    let aiOnly = false;
+    if (!parsed || !parsed.cases || !parsed.cases.length) {
+      const only = await aiReview([], ticketText);          // the tool found nothing: AI result, if any
+      if (only) { parsed = { cases: only, warnings: [] }; aiOnly = true; }
     }
     if (!parsed || !parsed.cases || !parsed.cases.length) throw new Error("Ticket read, but no program could be mapped. Send the ticket layout so it can be supported.");
 
@@ -93,6 +103,7 @@ async function readJira() {
       } catch (e) { /* non-fatal */ }
     }
 
+    if (!aiOnly) await aiReview(parsed.cases, ticketText);
     const cases = parsed.cases;
 
     if (cases.length > 1) {
@@ -108,11 +119,7 @@ async function readJira() {
     enterSingleMode();
     const got = cases[0];
     clearData(false);
-    const map = { calId: "calId", progId: "progId", tags: "tags", flag: "flag", event: "event", date: "date", time: "time", pre: "pre", dur: "dur", post: "post" };
-    const filled = [];
-    Object.keys(map).forEach(k => { if (got[k]) { $(map[k]).value = got[k]; filled.push(k); } });
-    saveState();
-    setSingleExtras({ glued: got._glued || [], global: got.global || "", repeatEvery: got.repeatEvery, endsAfter: got.endsAfter, flagNote: got.flagNote || "", cocIds: got.cocIds || "", calIds: got.calIds || "", unknownContent: got.unknownContent || "", shard: got.shard || "", noteKmTags: !!got.noteKmTags, shardTokens: got.shardTokens || "" });
+    const filled = fillSingle(got);
 
     if (filled.length) {
       let extra = "";
@@ -133,6 +140,7 @@ async function readJira() {
     msg.className = "jmsg err"; msg.textContent = "Couldn't read: " + (e.message || e) + " -- you can still enter values manually.";
   } finally {
     $("jiraRead").disabled = false;
+    renderAi();
     saveState();
   }
 }

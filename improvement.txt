@@ -1,14 +1,41 @@
-fix: thông báo lỗi "Unable to download all specified images"
+docs: hướng dẫn cài trên máy mới (chỉ cần Chrome)
 
 Làm gì
-- bg/save.js: icon của thông báo và trang offscreen dùng chrome.runtime.getURL("src/...").
-  Nguyên nhân: sau khi tách module, service worker nằm ở src/bg/, nên đường dẫn tương đối
-  "src/icons/icon128.png" bị hiểu thành src/bg/src/icons/... và Chrome không tải được icon.
-- CLAUDE.md: sửa luật về đường dẫn extension (dùng getURL, trừ executeScript files).
+- README.txt: viết lại mục INSTALL / UPDATE — máy mới chỉ cần Chrome, tải ZIP từ GitHub rồi
+  Load unpacked thư mục chứa manifest.json; ghi rõ không để node_modules hay file tên bắt đầu
+  bằng "_" trong thư mục extension. Bỏ dòng version cũ (2.10.0).
 
 Kiểm tra
-- npm test: 6 test đều qua; hai entry vẫn nạp được với chrome giả lập.
+- Lấy bản sạch của main trên GitHub (giống máy mới tải về) và rà: manifest hợp lệ, mọi file nó trỏ
+  tới đều có; 68 dòng import đều là đường dẫn tương đối, đúng hoa/thường, file tồn tại; không import
+  gói ngoài, không dùng API của Node, không tải script từ mạng; không có file tên bắt đầu bằng "_".
+- Service worker và popup của bản sạch nạp được bằng jsc của macOS (không dùng Node).
 
 Chưa kiểm / lưu ý
-- Chưa thử trong Chrome thật: Reload extension, chạy một check tới khi hiện thông báo; và thử lưu ảnh
-  vào thư mục đã chọn (dùng trang offscreen).
+- Chưa cài thử trên một máy khác thật.
+- Không đổi code trong src/.
+
+
+feat (nhánh api): AI assist ở bước 2 — phần so sánh và giao diện (chưa có phần gửi cho AI)
+
+Làm gì
+- core/ai.js (mới): AI_FIELDS là danh sách đề mục duy nhất; prompt chữ thuần (không JSON, không link),
+  hàm đọc khối CALCHECK-BEGIN/END, so sánh tool và AI theo giá trị, kiểm id AI có trong ticket không,
+  gộp kết quả khi chọn "Use AI". CLEARABLE trong popup/dom.js giờ lấy từ AI_FIELDS.
+- popup/ai.js (mới) + popup.html: toggle "AI assist" (mặc định tắt), dòng review 4 trạng thái
+  (Match / Need review / AI only / AI unavailable), popup Detail hai cột theo từng program, nút
+  Use tool / Use AI, tô vàng ô lệch (chế độ 1 program), hỏi lại một lần trước khi chạy nếu chưa chọn bên.
+- popup/jira.js, session.js, ui.js: gọi AI assist sau khi tool đọc ticket; lưu trạng thái review theo phiên.
+- CLAUDE.md: thêm hai file mới vào bảng module và quy tắc thêm đề mục.
+
+Kiểm tra
+- npm test: 7/7 qua (thêm 1 test cho core/ai.js).
+- Thử popup trên trang giả lập (chrome và câu trả lời AI được giả): đủ 4 trạng thái, Detail, Use hai bên,
+  ticket nhiều program, hỏi lại trước khi chạy, tắt toggle.
+
+Chưa kiểm / lưu ý
+- askAi() trong popup/ai.js đang để trống theo yêu cầu: bật toggle trong Chrome thật sẽ luôn ra "AI unavailable".
+- Chưa chạy trong Chrome thật (cần Reload ở chrome://extensions).
+- Ngày 03/11 và 11/3 được tính là khác nhau (không tự đảo ngày/tháng).
+- Chế độ nhiều program chưa tô màu từng dòng; xem khác biệt trong Detail.
+- Không đổi version.

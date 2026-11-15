@@ -42,11 +42,22 @@ SUPPORTED TICKET LAYOUTS
 
 INSTALL / UPDATE
 ----------------
+Only Chrome is needed. No Node, no Homebrew, no git, no build step.
+
+0. Get the folder: on GitHub click Code -> Download ZIP and unzip it
+   (the folder is then named CalCheckExt-main), or clone the repo.
 1. Chrome -> chrome://extensions
 2. Enable "Developer mode" (top-right).
-3. First install: "Load unpacked" -> select this CalCheckExt folder.
-   Update: click the Reload icon on the CalCheck card.
-4. The version shown should be 2.10.0.
+3. First install: "Load unpacked" -> select the folder that contains
+   manifest.json (CalCheckExt / CalCheckExt-main), NOT the src folder.
+   Update: replace the folder with the new download (or git pull), then
+   click the Reload icon on the CalCheck card.
+4. The version on the card must equal the version on GitHub (main);
+   step 1 of the popup checks this when you click Next.
+
+Node is only for developers who run the tests (npm test). Do not leave a
+node_modules folder, or any file/folder whose name starts with "_", inside
+the extension folder: Chrome refuses to load it.
 
 NOTES
 -----

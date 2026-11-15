@@ -83,6 +83,20 @@
   .ver-row { display:flex; justify-content:space-between; padding:3px 0; font-size:13px; }
   .ver-row b { font-variant-numeric:tabular-nums; }
   .logbar { display:flex; justify-content:flex-end; margin-top:6px; }
+  .ai-tog { display:inline-flex; align-items:center; gap:6px; margin:8px 0 0; cursor:pointer; }
+  .ai-tog input { appearance:none; -webkit-appearance:none; width:26px; height:14px; padding:0; border:0; border-radius:7px; background:#c3c7d6; position:relative; cursor:pointer; flex:0 0 auto; }
+  .ai-tog input::before { content:""; position:absolute; top:2px; left:2px; width:10px; height:10px; border-radius:50%; background:#fff; transition:left .12s; }
+  .ai-tog input:checked { background:#2d6cdf; } .ai-tog input:checked::before { left:14px; }
+  .ai-line { font-size:11px; margin-top:6px; }
+  .ai-line a { color:#2d6cdf; font-weight:700; margin-left:4px; }
+  .ai-ok { background:#e5f6ea; color:#0a7d28; } .ai-off { background:#eceef4; color:#5a5f72; }
+  input.ai-diff { border-color:#e0a030; background:#fff8e6; }
+  .ai-detail { max-height:250px; overflow:auto; margin-bottom:4px; }
+  .ai-detail table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:11px; margin-bottom:8px; }
+  .ai-detail th, .ai-detail td { border:1px solid #e1e4ee; padding:3px 5px; text-align:left; vertical-align:top; overflow-wrap:anywhere; }
+  .ai-detail th { background:#f1f2f8; } .ai-detail th:first-child, .ai-detail td:first-child { width:24%; color:#5a5f72; }
+  .ai-detail caption { text-align:left; font-weight:700; padding:2px 0; overflow-wrap:anywhere; }
+  .ai-detail tr.dif td { background:#fff8e6; } .ai-detail .none { color:#9aa0b4; font-style:italic; }
 </style>
 </head>
 <body>
@@ -130,6 +144,20 @@
       </div>
     </div>
 
+    <!-- AI assist: tool vs AI popup (step 2) -->
+    <div class="modal hide" id="aiModal">
+      <div class="modal-card" role="dialog" aria-modal="true">
+        <h3 style="color:#16182b;">Tool vs AI</h3>
+        <div class="ai-detail" id="aiDetail"></div>
+        <div class="hint">Use fills the form with that side's values (all programs).</div>
+        <div class="btns">
+          <button class="act primary" id="aiUseTool" type="button">Use tool</button>
+          <button class="act primary" id="aiUseAi" type="button">Use AI</button>
+          <button class="act ghost" id="aiClose" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- STEP 2: VALUES -->
     <section id="stepForm" class="hide">
       <div class="jira">
@@ -139,6 +167,8 @@
           <button id="jiraRead">Read</button>
         </div>
         <div class="jmsg hide" id="jiraMsg"></div>
+        <label class="ai-tog" title="Ask AI to read the ticket too and compare its result with the tool's"><input type="checkbox" id="aiAssist"> AI assist</label>
+        <div class="ai-line hide" id="aiLine"><span class="cap-tag" id="aiBadge" style="margin-left:0;"></span> <span id="aiText"></span><a href="#" id="aiDetailBtn" class="hide">Detail</a></div>
       </div>
 
       <div id="batchBox" class="hide">

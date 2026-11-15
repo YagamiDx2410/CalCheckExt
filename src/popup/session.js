@@ -25,6 +25,8 @@ export let lastSummary = [];     // latest result per case (re-checks replace on
 
 export let singleExtras = {};
 
+export let aiState = null;      // AI assist review of the current ticket (null = none)
+
 export function ticketKey() { const m = ($("jiraLink").value || "").match(/[A-Z][A-Z0-9]+-\d+/); return m ? m[0] : ""; } // Global/Repeat carried into single-mode CHECK (no UI fields)
 
 export function enterSingleMode() {
@@ -100,7 +102,7 @@ export function sessionHasData() { return batchCases.length > 0 || CLEARABLE.som
 
 export function saveState() {
   const data = {}; FIELDS.forEach(f => data[f] = $(f).value);
-  chrome.storage.local.set({ form: data, session: { v: 1, savedAt: Date.now(), step: baseStep, ticket: sessionTicket, batch: batchCases, sel: batchSel ? Array.from(batchSel) : null, btags: $("batchTags").value, last: lastSummary.map(r => { const c = Object.assign({}, r); delete c.imageDataUrl; return c; }), extras: singleExtras, jmsg: jiraMsgSnap() } });
+  chrome.storage.local.set({ form: data, session: { v: 1, savedAt: Date.now(), step: baseStep, ticket: sessionTicket, batch: batchCases, sel: batchSel ? Array.from(batchSel) : null, btags: $("batchTags").value, last: lastSummary.map(r => { const c = Object.assign({}, r); delete c.imageDataUrl; return c; }), extras: singleExtras, ai: aiState, jmsg: jiraMsgSnap() } });
 }
 
 export function loadState() {
@@ -117,6 +119,7 @@ export function loadState() {
     if (fresh) {
       restoredSession = session; sessionTicket = session.ticket || "";
       singleExtras = session.extras || {};
+      aiState = session.ai || null;
       if (session.jmsg) { const m = $("jiraMsg"); m.className = session.jmsg.cls; m.textContent = session.jmsg.text; m.classList.remove("hide"); }
       batchSel = session.sel ? new Set(session.sel) : null; lastSummary = session.last || []; $("batchTags").value = session.btags || "";
       if (session.batch && session.batch.length > 1) enterBatchMode(session.batch, true);
@@ -134,6 +137,15 @@ export function clearData(alsoJiraLink) {
   saveState();
 }
 
+// one program -> the single-mode fields; returns the names of the fields it filled
+export function fillSingle(got) {
+  const filled = [];
+  ["calId", "progId", "tags", "flag", "event", "date", "time", "pre", "dur", "post"].forEach(k => { if (got[k]) { $(k).value = got[k]; filled.push(k); } });
+  saveState();
+  singleExtras = { glued: got._glued || [], global: got.global || "", repeatEvery: got.repeatEvery, endsAfter: got.endsAfter, flagNote: got.flagNote || "", cocIds: got.cocIds || "", calIds: got.calIds || "", unknownContent: got.unknownContent || "", shard: got.shard || "", noteKmTags: !!got.noteKmTags, shardTokens: got.shardTokens || "" };
+  return filled;
+}
+
 // ---- setters: an imported binding is read-only, so other modules assign through these ----
 export function setSessionTicket(v) { sessionTicket = v; }
 export function setRestoredSession(v) { restoredSession = v; }
@@ -141,3 +153,4 @@ export function setBatchCases(v) { batchCases = v; }
 export function setBatchSel(v) { batchSel = v; }
 export function setLastSummary(v) { lastSummary = v; }
 export function setSingleExtras(v) { singleExtras = v; }
+export function setAiState(v) { aiState = v; }

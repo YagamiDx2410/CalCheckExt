@@ -24,6 +24,7 @@ Load unpacked from the **repo root** (`manifest.json` is at the root and points 
 | `core/compare.js` | every `cmp*`, `flagRuleChecks`, `eventProgramCheck`, `calendarChecks`, `failLabels` |
 | `core/layout.js` | screenshot / report geometry: `planListClip`, `topStackLayout`, `planCalendarParts` |
 | `core/version.js` | `parseVersion`, `cmpVersion`, `manifestVersion` |
+| `core/ai.js` | AI assist: `AI_FIELDS` (the one list of form / AI target fields), `buildAiPrompt`, `parseAiReply`, `aiCompare`, `aiMerge` |
 | `core/adf.js` | Jira ADF readers: `adfCellLines`, `allTableRows`, `adfPlainText` |
 | `core/parser/index.js` | `parseTicketV2` (picks the reader) + re-exports every parser |
 | `core/parser/{table,offer,boss,shard,extras,legacy}.js` | one ticket layout / concern each |
@@ -47,6 +48,7 @@ Load unpacked from the **repo root** (`manifest.json` is at the root and points 
 | `popup/jira.js` | `readJira`: fetch ticket, call parsers, fill the form |
 | `popup/session.js` | popup state + setters, `saveState` / `loadState`, single / batch mode |
 | `popup/version.js` | step 1 version gate: GitHub URL field, `versionGate`, version popup |
+| `popup/ai.js` | AI assist toggle, review line, Detail popup, `askAi` (send / receive: still empty) |
 | `popup/folder.js` | save-folder picker (File System Access + IndexedDB) |
 | `popup/dom.js` | `$`, `FIELDS`, `CLEARABLE`, `esc` |
 
@@ -61,7 +63,8 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
 3. Add `export` on the declaration and one `import { ... }` line in the caller. Keep import lists alphabetical.
 4. New `core/` function -> add a case in `tests/core.test.js`.
 5. New comparison -> `core/compare.js`, returning the usual row `{ label, pass, line }`; call it from `bg/check.js`.
-6. New field read from KM -> inside the relevant `inj_*` in `bg/injected.js`.
+6. New form field that AI assist should also read -> one line in `AI_FIELDS` (`core/ai.js`) plus its input in `popup.html`.
+7. New field read from KM -> inside the relevant `inj_*` in `bg/injected.js`.
 
 ## 4. Hard rules (break these and the extension breaks)
 - **`inj_*` must stay self-contained.** They are shipped to the KM page as text (`executeScript` /
