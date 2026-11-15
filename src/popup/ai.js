@@ -9,10 +9,14 @@ import { aiState, clearData, enterBatchMode, enterSingleMode, fillSingle, saveSt
 // when the AI cannot be reached -> the review shows "AI unavailable".
 async function askAi(prompt) { return ""; }
 
+// false while askAi above is empty: the toggle then only shows "Under Development" and no AI call is
+// made. Set to true in the same change that makes askAi return a real reply.
+const AI_READY = false;
+
 // Second read of the ticket by AI, compared with the tool's cases. Sets the review state.
 // Returns the AI's programs ONLY when the tool found none ("AI only"); otherwise null.
 export async function aiReview(toolCases, ticketText) {
-  if (!$("aiAssist").checked) { setAiState(null); return null; }
+  if (!$("aiAssist").checked || !AI_READY) { setAiState(null); return null; }
   const m = $("jiraMsg"); m.className = "jmsg info"; m.textContent = "Asking AI…";
   const nonce = Math.random().toString(36).slice(2, 6).padEnd(4, "0");
   let ai = null, why = "";
@@ -29,6 +33,12 @@ export function clearAi() { setAiState(null); renderAi(); }
 export function renderAi() {
   const st = $("aiAssist").checked ? aiState : null;
   AI_FIELDS.forEach(f => $(f.key).classList.remove("ai-diff"));
+  if ($("aiAssist").checked && !AI_READY) {
+    $("aiBadge").className = "cap-tag cap-warn"; $("aiBadge").textContent = "Under Development";
+    $("aiText").textContent = "AI assist is not connected yet; the tool reads the ticket as usual.";
+    $("aiDetailBtn").classList.add("hide"); $("aiLine").classList.remove("hide");
+    return;
+  }
   $("aiLine").classList.toggle("hide", !st);
   if (!st) return;
   const dif = (st.rows || []).filter(r => !r.same).length;
@@ -78,7 +88,7 @@ function useSide(side) {
 
 // Before a run: with an unresolved "Need review", ask once.
 export function aiConfirmRun() {
-  const st = $("aiAssist").checked ? aiState : null;
+  const st = $("aiAssist").checked && AI_READY ? aiState : null;
   if (!st || st.status !== "review" || st.used || st.asked) return true;
   if (!confirm("AI and the tool read this ticket differently and you have not picked a side (see Detail).\nRun the check with the values on screen?")) return false;
   setAiState(Object.assign({}, st, { asked: true })); saveState();

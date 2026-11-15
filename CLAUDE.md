@@ -93,7 +93,12 @@ Dependencies go one way only: `bg -> core`, `popup -> core`. `core` never import
 
 ## 7. Branches and version
 - `main` = the released extension. Every other branch = a prototype / feature still in development.
-- **Never change `version` in `manifest.json` on a branch.** The version changes only with a commit on
-  `main` (a merge or a direct change), and only when the user asks for the bump.
+- **Never change `version` in `manifest.json` on a branch.** The version changes only with a commit on `main`.
+- **Auto-bump on `main`:** when a task on `main` changes the extension (anything under `src/` or `manifest.json`),
+  compare the local `version` with the pushed one (`git show origin/main:manifest.json`). Equal = the last
+  version is already on GitHub -> raise the middle number by one and reset the last (`2.33.0` -> `2.34.0`),
+  once, without asking. Local already higher = this milestone is bumped; leave it. Docs-only changes: no bump.
+  Say in the reply and in `improvement.txt` that the version changed (until it is pushed, the step-1 version
+  check reports a mismatch on that copy).
 - So `version` on `main` is the single source of truth for "latest version".
 - Check `git status -sb` before editing so you know which branch you are on; do not switch branches yourself.
